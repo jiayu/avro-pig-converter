@@ -12,7 +12,7 @@ import java.util.Queue;
  * @author jamesji
  *
  */
-public class MetadataTree {
+public class AvroBeanTree {
 
 	//Converter class should take the queue class only, everytime, it will refresh 
 	private Queue<FieldBean> queue = new LinkedList<FieldBean>();
@@ -23,7 +23,7 @@ public class MetadataTree {
 	 * On initializing of this class, we traverse the tree(metadata class) and pick up all the attributes
 	 * @throws ClassNotFoundException 
 	 */
-	public MetadataTree(String className) throws ClassNotFoundException{
+	public AvroBeanTree(String className) throws ClassNotFoundException{
 		Class<?> m = Class.forName(className);
 		
 		pushFields(m, "", 0);

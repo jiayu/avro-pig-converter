@@ -33,16 +33,16 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
  * @author jamesji
  * 
  */
-public class MetadataTupleConverter {
+public class AvroTupleConverter {
 
 	private ExpressionParser parser = new SpelExpressionParser();
-	private MetadataTree tree;
+	private AvroBeanTree tree;
 	private TupleFactory mTupleFactory = TupleFactory.getInstance();
 	private BagFactory mBagFactory = BagFactory.getInstance();
 	private Map<String, Byte> fieldTypeMap = new HashMap<String, Byte>();
 
-	public MetadataTupleConverter(String className) throws ClassNotFoundException{
-		tree = new MetadataTree(className);
+	public AvroTupleConverter(String className) throws ClassNotFoundException{
+		tree = new AvroBeanTree(className);
 	}
 	
 	/**
@@ -121,8 +121,8 @@ public class MetadataTupleConverter {
 	 * @param metadata
 	 * @return
 	 */
-	public Tuple convert(Metadata metadata) {
-		EvaluationContext context = new StandardEvaluationContext(metadata);
+	public Tuple convert(Object obj) {
+		EvaluationContext context = new StandardEvaluationContext(obj);
 
 		return mTupleFactory.newTuple(makeAList(tree.getListOfFields(),
 				context, 0));
