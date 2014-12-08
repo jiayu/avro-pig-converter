@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import org.apache.hadoop.io.SequenceFile.Metadata;
 import org.apache.pig.data.BagFactory;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DataType;
@@ -20,8 +19,8 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 /**
- * This class is used for converting a Metadata object into a pig Tuple. The
- * tree structure of the tuple should remain the same as the Metadata object.
+ * This class is used for converting an object into a pig Tuple. The
+ * tree structure of the tuple should remain the same as the object.
  * The basic type converting rule is below If the current attribute is primitive
  * type (other than CharSequence), just return it If the current attribute is a
  * CharSequence (Avro stores String as CharSequence which Pig does not
@@ -116,9 +115,9 @@ public class AvroTupleConverter {
 	}
 
 	/**
-	 * for converting metadata into a tuple
+	 * for converting object into a tuple
 	 * 
-	 * @param metadata
+	 * @param object
 	 * @return
 	 */
 	public Tuple convert(Object obj) {
@@ -162,11 +161,6 @@ public class AvroTupleConverter {
 				String path = getCurrentPath(bean.getPath());
 				DataBag bag = mBagFactory.newDefaultBag();
 
-				// genereate a new subQueue with path like
-				// operational_metadata.ingestion_metadata.ingestion_process[0].os
-				// operational_metadata.ingestion_metadata.ingestion_process[0].ip
-				// operational_metadata.ingestion_metadata.ingestion_process[1].os
-				// operational_metadata.ingestion_metadata.ingestion_process[1].ip
 				Queue<FieldBean> subQueue = new LinkedList<FieldBean>();
 
 				List<FieldBean> subList = generateSubList(queue, path);
@@ -246,10 +240,7 @@ public class AvroTupleConverter {
 	}
 
 	/**
-	 * removing sub-paths from current path eg: if
-	 * operational_metadata.ingestion_metadata is null, remove
-	 * operational_metadata.ingestion_metadata.ingestion_process.os and
-	 * operational_metadata.ingestion_metadata.ingestion_process.ip
+	 * removing sub-paths from current path
 	 */
 	private void removedSubPathFromQueue(String path, Queue<FieldBean> queue) {
 		while (!queue.isEmpty()) {
@@ -262,8 +253,7 @@ public class AvroTupleConverter {
 	}
 
 	/**
-	 * return current path eg: operational_metadata.ingestion_metadata will
-	 * return ingestion_metadata
+	 * return current path 
 	 * 
 	 * @param path
 	 * @return

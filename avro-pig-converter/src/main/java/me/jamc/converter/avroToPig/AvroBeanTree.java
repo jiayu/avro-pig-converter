@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Queue;
 
 /**
- * This class is used for building up the metadata class tree using reflection. It flattens  
+ * This class is used for building up the class tree using reflection. It flattens  
  * 
  * @author jamesji
  *
@@ -20,7 +20,7 @@ public class AvroBeanTree {
 	private List<FieldBean> list = new LinkedList<FieldBean>();
 	
 	/**
-	 * On initializing of this class, we traverse the tree(metadata class) and pick up all the attributes
+	 * On initializing of this class, we traverse the tree and pick up all the attributes
 	 * @throws ClassNotFoundException 
 	 */
 	public AvroBeanTree(String className) throws ClassNotFoundException{
@@ -66,14 +66,6 @@ public class AvroBeanTree {
 	 * This is the only public method used for return a list of fields stored in the queue.
 	 * Everytime this method gets called, we need to clear the queue and populate fields from the list.
 	 * @return Sample below
-	 * Path				 Type												Level
-	 * business_metadata com.emc.ecps.bigdata.commons.avro.BusinessMetadata 1
-	 * business_metadata.party_id java.lang.CharSequence 2
-	 * business_metadata.serial_number java.lang.CharSequence 2
-	 * business_metadata.user_defined_values java.util.Map 2
-	 * operational_metadata com.emc.ecps.bigdata.commons.avro.OperationalMetadata 1
-	 * operational_metadata.is_chunked java.lang.Boolean 2
-	 * operational_metadata.data_type java.lang.CharSequence 2
 	 */
 	public Queue<FieldBean> getListOfFields(){
 		refreshQueue();

@@ -1,6 +1,17 @@
-#Avro-pig-converter project
+# avro-pig-converter
 
-In my recent project, we had this request to dynamically generate pig tuple from a avro object. I think it would be helpful to generalize the library so as to be used by others.
+## About the project
 
-##Folder structure
-There are two folders in this project right now. 1 for the main library code and 2 for the test package come a long with the code.
+This was oringinally from a project I was working on with one of my client. We stored some data in avro format as metadata of the sequence file. When we read the metadata in Pig, we wanted to find a way to easily convert this metadata into tuple. As they were part of the sequence file, we could not use org.apache.pig.piggybank.storage.avro.AvroStorage from the piggybank. As a result, I started this project. 
+
+For now, there is only one way conversion which is from Avro to Pig.
+
+## TO-DOs
+
+1. Remove SPEL dependency
+2. Add a sample project
+3. Add Pig to Avro conversion
+
+## Contact
+
+If you find this interesting or you want to contribute, email me at jiayu.ji@gmail.com

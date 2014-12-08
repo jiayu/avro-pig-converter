@@ -1,5 +1,17 @@
-avro-pig-converter
-==================
+# avro-pig-converter
 
-I only had time to copied and pasted the code snipet from my previous project and change just enough to make it compilable. 
-The next step would be to write some test to test it out. Second step would be removing the spring expression dependency. 
+## About the project
+
+This was oringinally from a project I was working on with one of my client. We stored some data in avro format as metadata of the sequence file. When we read the metadata in Pig, we wanted to find a way to easily convert this metadata into tuple. As they were part of the sequence file, we could not use org.apache.pig.piggybank.storage.avro.AvroStorage from the piggybank. As a result, I started this project. 
+
+For now, there is only one way conversion which is from Avro to Pig.
+
+## TO-DOs
+
+1. Remove SPEL dependency
+2. Add a sample project
+3. Add Pig to Avro conversion
+
+## Contact
+
+If you find this interesting or you want to contribute, email me at jiayu.ji@gmail.com
