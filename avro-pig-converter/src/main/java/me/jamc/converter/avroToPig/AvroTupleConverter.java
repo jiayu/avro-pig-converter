@@ -7,16 +7,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import org.apache.commons.jexl2.JexlContext;
+import org.apache.commons.jexl2.JexlEngine;
+import org.apache.commons.jexl2.ObjectContext;
 import org.apache.pig.data.BagFactory;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
-import org.springframework.expression.EvaluationContext;
-import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 /**
  * This class is used for converting an object into a pig Tuple. The
@@ -34,7 +33,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
  */
 public class AvroTupleConverter {
 
-	private ExpressionParser parser = new SpelExpressionParser();
+	private static final JexlEngine jexl = new JexlEngine();
 	private AvroBeanTree tree;
 	private TupleFactory mTupleFactory = TupleFactory.getInstance();
 	private BagFactory mBagFactory = BagFactory.getInstance();
@@ -121,14 +120,14 @@ public class AvroTupleConverter {
 	 * @return
 	 */
 	public Tuple convert(Object obj) {
-		EvaluationContext context = new StandardEvaluationContext(obj);
+		JexlContext context = new ObjectContext(jexl,obj);
 
 		return mTupleFactory.newTuple(makeAList(tree.getListOfFields(),
 				context, 0));
 	}
 
 	private List<Object> makeAList(Queue<FieldBean> queue,
-			EvaluationContext context, int level) {
+			JexlContext context, int level) {
 		List<Object> list = new LinkedList<Object>();
 
 		while (!queue.isEmpty()) {
@@ -145,19 +144,16 @@ public class AvroTupleConverter {
 	}
 
 	private void convertFieldToTuple(Queue<FieldBean> queue,
-			EvaluationContext context, int level, List<Object> list,
+			JexlContext context, int level, List<Object> list,
 			FieldBean bean) {
 		if (isNotNull(bean, context)) {
 			if (bean.getType().equals("java.lang.CharSequence")) {
-				list.add(parser.parseExpression(bean.getPath() + "")
-						.getValue(context).toString());
+				list.add(jexl.createExpression(bean.getPath()).evaluate(context).toString());
 			} else if (bean.getType().startsWith("java.lang")) {
-				list.add(parser.parseExpression(bean.getPath()).getValue(
-						context));
+				list.add(jexl.createExpression(bean.getPath()).evaluate(context));
 			} else if (bean.getType().equals("java.util.List")) {
 
-				List<Object> valueList = parser.parseExpression(bean.getPath())
-						.getValue(context, List.class);
+				List<Object> valueList = (List<Object>)jexl.createExpression(bean.getPath()).evaluate(context);
 				String path = getCurrentPath(bean.getPath());
 				DataBag bag = mBagFactory.newDefaultBag();
 
@@ -178,8 +174,7 @@ public class AvroTupleConverter {
 				list.add(bag);
 
 			} else if (bean.getType().equals("java.util.Map")) {
-				list.add(parser.parseExpression(bean.getPath()).getValue(
-						context, Map.class));
+				list.add((Map)jexl.createExpression(bean.getPath()).evaluate(context));
 			} else {
 				list.add(mTupleFactory.newTuple(makeAList(queue, context,
 						level + 1)));
@@ -234,9 +229,8 @@ public class AvroTupleConverter {
 	 * @param context
 	 * @return
 	 */
-	private boolean isNotNull(FieldBean bean, EvaluationContext context) {
-		return !parser.parseExpression(bean.getPath() + " == null ").getValue(
-				context, Boolean.class);
+	private boolean isNotNull(FieldBean bean, JexlContext context) {
+		return !(Boolean)jexl.createExpression(bean.getPath() + " == null ").evaluate(context);
 	}
 
 	/**

@@ -61,10 +61,10 @@ public class TestAvroTupleConverter {
 	/**
 	 * this test does not pass which is odd
 	 */
-	@Ignore
+	@Test
 	public void testSchemaGenerated(){
-		String expectedSchema = "{attributeString: chararray,attributeInt: int,attributeLong: long,attributeDouble: double}";
-		Assert.assertEquals(expectedSchema, converter.generateSchema());
+		String expectedSchema = "{attributeString: chararray,attributeInt: int,attributeLong: long,attributeDouble: double,attributeList: {attributeString: chararray},attributeMap: map[]}";
+		Assert.assertEquals(expectedSchema.toString(), converter.generateSchema().toString());
 	}
 
 }
