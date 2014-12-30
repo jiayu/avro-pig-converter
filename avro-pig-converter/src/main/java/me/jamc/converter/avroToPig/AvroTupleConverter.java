@@ -135,7 +135,6 @@ public class AvroTupleConverter {
 				return list;
 
 			FieldBean bean = queue.poll();
-
 			convertFieldToTuple(queue, context, level, list, bean);
 
 		}

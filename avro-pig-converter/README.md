@@ -8,9 +8,8 @@ For now, there is only one way conversion which is from Avro to Pig.
 
 ## TO-DOs
 
-1. Remove SPEL dependency
-2. Add a sample project
-3. Add Pig to Avro conversion
+1. Add a sample project
+2. Add Pig to Avro conversion
 
 ## Contact
 
